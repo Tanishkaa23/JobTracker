@@ -6,11 +6,12 @@ import googleRoutes from './routes/google.routes.js';
 import cronRoutes from './routes/cron.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 import cookieParser from 'cookie-parser';
-
+import dotenv from 'dotenv';
+dotenv.config({});
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',   // your Vite dev server — change if different
+    origin:process.env.CLIENT_URL,   // your Vite dev server — change if different
     credentials: true                   // REQUIRED — allows cookies to be sent cross-origin
 }));
 
