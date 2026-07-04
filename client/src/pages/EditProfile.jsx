@@ -15,7 +15,7 @@ export default function EditProfile() {
     const [googleStatus, setGoogleStatus] = useState({ connected: false });
     const [googleStatusLoading, setGoogleStatusLoading] = useState(true);
     const navigate = useNavigate();
-    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const apiBaseUrl = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         if (user) {

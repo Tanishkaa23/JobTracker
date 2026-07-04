@@ -3,7 +3,7 @@ import api from '../api/axios';
 
 export default function GoogleConnectButton() {
     const [status, setStatus] = useState({ connected: false, email: '' });
-    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const apiBaseUrl = import.meta.env.VITE_API_URL;
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
 

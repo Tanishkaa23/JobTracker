@@ -21,7 +21,7 @@ export default function Dashboard() {
     const [googleStatusLoading, setGoogleStatusLoading] = useState(true);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const apiBaseUrl = import.meta.env.VITE_API_URL ;
 
     async function fetchGoogleStatus() {
         setGoogleStatusLoading(true);
