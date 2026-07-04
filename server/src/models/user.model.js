@@ -17,6 +17,20 @@ const userSchema = new mongoose.Schema({
         minlength: [8, "Password must be at least 8 characters long"],
         select: false
     },
+    google: {
+        connected: {
+            type: Boolean,
+            default: false
+        },
+        email: String,
+        accessToken: String,
+        refreshToken: String,
+        expiryDate: Number
+    },
+    lastWeeklyReportSentAt: {
+        type: Date,
+        default: null
+    }
 },{timestamps: true});
 
 const userModel = mongoose.model('User', userSchema);

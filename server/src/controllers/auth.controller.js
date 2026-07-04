@@ -2,6 +2,7 @@ import userModel from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import blacklistModel from '../models/blacklist.model.js';
+import {sendRegEmail} from '../services/email.service.js'
 export async function registerUser(req, res) {
     const {name,email,password} = req.body;
     try{
@@ -17,9 +18,17 @@ export async function registerUser(req, res) {
 
         const token = jwt.sign({id:user._id}, process.env.JWT_SECRET);
 
-        res.cookie('token', token)
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false,       // true only in production over HTTPS
+            sameSite: 'lax',      // 'lax' is fine for same-site-ish local dev; use 'none' + secure:true in cross-site production
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
 
         res.status(201).json({message: "User registered successfully", user: {name,email}});
+
+        await sendRegEmail(user.email, user.name)
+
     } catch (error) {
         res.status(400).json({message: error.message});
     }
@@ -45,7 +54,12 @@ export async function loginUser(req, res) {
             });
         }
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
-        res.cookie('token', token)
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false,       // true only in production over HTTPS
+            sameSite: 'lax',      // 'lax' is fine for same-site-ish local dev; use 'none' + secure:true in cross-site production
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
         res.status(200).json({message: "Login successful", user: {name: user.name, email: user.email}, token});
 
     } catch (error) {
@@ -81,5 +95,27 @@ export async function userDetails(req, res) {
 
     } catch (error) {
         return res.status(400).json({message: error.message});
+    }
+}
+
+export async function updateUser(req, res) {
+    const { name, email } = req.body;
+    try {
+        if (!name || !email) {
+            return res.status(400).json({ message: 'Name and email are required.' });
+        }
+
+        const existingUser = await userModel.findOne({ email, _id: { $ne: req.user._id } });
+        if (existingUser) {
+            return res.status(409).json({ message: 'Email already in use by another account.' });
+        }
+
+        req.user.name = name;
+        req.user.email = email;
+        await req.user.save();
+
+        return res.status(200).json({ message: 'Profile updated successfully', user: { name: req.user.name, email: req.user.email } });
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
     }
 }
