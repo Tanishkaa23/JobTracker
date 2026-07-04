@@ -20,8 +20,8 @@ export async function registerUser(req, res) {
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false,       // true only in production over HTTPS
-            sameSite: 'lax',      // 'lax' is fine for same-site-ish local dev; use 'none' + secure:true in cross-site production
+           secure: process.env.NODE_ENV === 'production',
+           sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
@@ -56,8 +56,8 @@ export async function loginUser(req, res) {
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false,       // true only in production over HTTPS
-            sameSite: 'lax',      // 'lax' is fine for same-site-ish local dev; use 'none' + secure:true in cross-site production
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',      // 'lax' is fine for same-site-ish local dev; use 'none' + secure:true in cross-site production
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         res.status(200).json({message: "Login successful", user: {name: user.name, email: user.email}, token});
@@ -79,8 +79,11 @@ export async function logoutUser(req, res) {
 
         await blacklistModel.create({token})
 
-        res.clearCookie("token")
-
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        });
         return res.status(200).json({message:"Logged out successfully"})
     }catch(err){
         return res.status(500).json({message:err.message})
