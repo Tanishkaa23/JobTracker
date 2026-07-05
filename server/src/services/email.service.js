@@ -14,13 +14,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-transporter.verify((error) => {
-  if (error) {
-    console.error('Error connecting to email server:', error);
-  } else {
-    console.log('Email server is ready to send messages');
-  }
-});
+// transporter.verify((error) => {
+//   if (error) {
+//     console.error('Error connecting to email server:', error);
+//   } else {
+//     console.log('Email server is ready to send messages');
+//   }
+// });
 
 function formatDate(value) {
   if (!value) return 'Not set';
