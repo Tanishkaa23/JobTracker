@@ -3,6 +3,14 @@ import userModel from '../models/user.model.js';
 import blacklistModel from '../models/blacklist.model.js';
 export async function authMiddleware(req, res, next){
    try{
+
+    console.log("===== AUTH MIDDLEWARE =====");
+    console.log("Path:", req.path);
+    console.log("Origin:", req.headers.origin);
+    console.log("Cookies:", req.cookies);
+    console.log("Cookie header:", req.headers.cookie);
+    console.log("Authorization:", req.headers.authorization);
+
     const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
     if(!token){
