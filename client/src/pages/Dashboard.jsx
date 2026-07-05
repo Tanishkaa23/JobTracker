@@ -115,13 +115,11 @@ export default function Dashboard() {
 
                     <div className="flex items-center gap-3 w-full md:w-auto">
                         <button
-                            onClick={() => {
-                                document.getElementById('applications-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            }}
+                            onClick={() => navigate('/applications')}
                             className="md:hidden flex-1 px-4 py-2.5 rounded-xl text-sm font-bold font-sans border transition-all"
                             style={{ borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
                         >
-                            See applications ↓
+                            See applications →
                         </button>
                         <button
                             onClick={() => navigate('/applications/new')}
@@ -163,6 +161,7 @@ export default function Dashboard() {
 
                 <CareerAssistant />
 
+                <div className="hidden md:block">
                 <div className="flex items-center gap-1.5 rounded-full p-1.5 w-fit mb-4 animate-slide-up animation-delay-300" style={{ background: 'var(--color-border)' }}>
                     <button
                         onClick={() => setFilter('all')}
@@ -227,6 +226,7 @@ export default function Dashboard() {
                         })}
                     </div>
                 )}
+                </div>
             </main>
 
             <ConfirmModal

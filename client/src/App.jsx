@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import CreateApplication from './pages/CreateApplication';
 import ApplicationDetail from './pages/ApplicationDetail';
 import EditProfile from './pages/EditProfile';
+import MobileApplications from './pages/MobileApplications';
 
 export default function App() {
     return (
@@ -26,6 +27,10 @@ export default function App() {
                                 <Route
                                     path="/profile"
                                     element={<ProtectedRoute><EditProfile /></ProtectedRoute>}
+                                />
+                                <Route
+                                    path="/applications"
+                                    element={<ProtectedRoute><MobileApplications /></ProtectedRoute>}
                                 />
                                 <Route
                                     path="/applications/new"
