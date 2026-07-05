@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
-
+import { sendAppGmailMessage } from './google.service.js';
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -73,7 +73,12 @@ export async function sendRegEmail(userEmail, name) {
     </div>
   `;
 
-  await sendEmail(userEmail, subject, text, html);
+  await sendAppGmailMessage({
+    to: userEmail,
+    subject,
+    body: text,
+    html
+});
 }
 
 export async function sendStaleApplicationReminderEmail(userEmail, userName, applications) {

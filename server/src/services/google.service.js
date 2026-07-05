@@ -7,6 +7,19 @@ function getFrontendRedirectUrl() {
     return process.env.CLIENT_URL || 'http://localhost:5173';
 }
 
+export function getAppGmailClient() {
+    const oauth2Client = getGoogleOAuthClient();
+
+    oauth2Client.setCredentials({
+        refresh_token: process.env.REFRESH_TOKEN
+    });
+
+    return google.gmail({
+        version: 'v1',
+        auth: oauth2Client
+    });
+}
+
 // Build the Google consent URL for the authenticated user so Google can return
 // an authorization code that the backend exchanges for tokens.
 export function buildGoogleAuthUrl(userId) {
@@ -150,6 +163,30 @@ function encodeMessage({ from, to, subject, body, html }) {
         .replace(/\+/g, '-')
         .replace(/\//g, '_')
         .replace(/=+$/, '');
+}
+
+export async function sendAppGmailMessage({
+    to,
+    subject,
+    body,
+    html
+}) {
+    const gmail = getAppGmailClient();
+
+    const response = await gmail.users.messages.send({
+        userId: "me",
+        requestBody: {
+            raw: encodeMessage({
+                from: process.env.EMAIL_USER,
+                to,
+                subject,
+                body,
+                html
+            })
+        }
+    });
+
+    return response.data;
 }
 
 export async function sendGmailMessage(user, { to, subject, body, emphasis = [] }) {
