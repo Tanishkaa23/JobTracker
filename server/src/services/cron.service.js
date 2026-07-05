@@ -151,7 +151,7 @@ async function sendWeeklyReports() {
     console.log('[cron] today:', today.toISOString());
     console.log('[cron] today.getDay():', today.getDay());
 
-    if (today.getDay() !== 7) { //change to 1 
+    if (today.getDay() !== 0) { //change to 1 
         console.log('[cron] Weekly report skipped: not Tuesday');
         return;
     }
@@ -223,7 +223,7 @@ export async function runScheduledTasks() {
 
 function registerCron() {
     console.log('[cron] Registering cron job');
-    cronTask = cron.schedule('57 13 * * *', async () => {
+    cronTask = cron.schedule('05 14 * * *', async () => {
         console.log('[cron] callback fired');
         await runScheduledTasks();
     }, {
