@@ -118,7 +118,12 @@ export async function sendStaleApplicationReminderEmail(userEmail, userName, app
     </div>
   `;
 
-  await sendEmail(userEmail, subject, text, html);
+    await sendAppGmailMessage({
+      to: userEmail,
+      subject,
+      body: text,
+      html
+    });;
 }
 
 export async function sendWeeklyApplicationReportEmail(userEmail, userName, applications) {
@@ -196,5 +201,10 @@ export async function sendWeeklyApplicationReportEmail(userEmail, userName, appl
     </div>
   `;
 
-  await sendEmail(userEmail, subject, text, html, attachments);
+    await sendAppGmailMessage({
+      to: userEmail,
+      subject,
+      body: text,
+      html
+    });
 }
