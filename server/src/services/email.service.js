@@ -49,9 +49,12 @@ const sendEmail = async (to, subject, text, html, attachments = []) => {
     console.log('Message sent: %s', info.messageId);
     return info;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error("Error sending email:", error);
+    console.error("Error code:", error.code);
+    console.error("Error response:", error.response);
+    console.error("Error responseCode:", error.responseCode);
     throw error;
-  }
+}
 };
 
 export async function sendRegEmail(userEmail, name) {
