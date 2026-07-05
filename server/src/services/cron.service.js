@@ -223,7 +223,7 @@ export async function runScheduledTasks() {
 
 function registerCron() {
     console.log('[cron] Registering cron job');
-    cronTask = cron.schedule('05 14 * * *', async () => {
+    cronTask = cron.schedule('55 17 * * *', async () => {
         console.log('[cron] callback fired');
         await runScheduledTasks();
     }, {
