@@ -1,26 +1,7 @@
 import dotenv from 'dotenv';
-import nodemailer from 'nodemailer';
 import { sendAppGmailMessage } from './google.service.js';
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    type: 'OAuth2',
-    user: process.env.EMAIL_USER,
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    refreshToken: process.env.REFRESH_TOKEN,
-  },
-});
-
-// transporter.verify((error) => {
-//   if (error) {
-//     console.error('Error connecting to email server:', error);
-//   } else {
-//     console.log('Email server is ready to send messages');
-//   }
-// });
 
 function formatDate(value) {
   if (!value) return 'Not set';
@@ -35,27 +16,6 @@ function escapeHtml(value) {
     .replace(/"/g, '&quot;');
 }
 
-const sendEmail = async (to, subject, text, html, attachments = []) => {
-  try {
-    const info = await transporter.sendMail({
-      from: `"Job Tracker" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      text,
-      html,
-      attachments,
-    });
-
-    console.log('Message sent: %s', info.messageId);
-    return info;
-  } catch (error) {
-    console.error("Error sending email:", error);
-    console.error("Error code:", error.code);
-    console.error("Error response:", error.response);
-    console.error("Error responseCode:", error.responseCode);
-    throw error;
-}
-};
 
 export async function sendRegEmail(userEmail, name) {
   const subject = 'Job Tracker: Registration Confirmation';
