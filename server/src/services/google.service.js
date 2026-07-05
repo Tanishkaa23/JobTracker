@@ -148,28 +148,77 @@ function textToEmailHtml(body, emphasis = []) {
         .join('');
 }
 
-function encodeMessage({ from, to, subject, body, html }) {
-    const message = [
+function encodeMessage({
+    from,
+    to,
+    subject,
+    body,
+    html,
+    attachments = []
+}) {
+    // No attachments → simple email
+    if (!attachments.length) {
+        const message = [
+            `From: ${from}`,
+            `To: ${to}`,
+            `Subject: ${subject}`,
+            `MIME-Version: 1.0`,
+            `Content-Type: ${html ? "text/html" : "text/plain"}; charset="UTF-8"`,
+            `Content-Transfer-Encoding: 7bit`,
+            "",
+            html || body
+        ].join("\r\n");
+
+        return Buffer.from(message)
+            .toString("base64")
+            .replace(/\+/g, "-")
+            .replace(/\//g, "_")
+            .replace(/=+$/, "");
+    }
+
+    // Email with attachments
+    const boundary = `jobtracker_${Date.now()}`;
+
+    let message = [
         `From: ${from}`,
         `To: ${to}`,
         `Subject: ${subject}`,
-        `Content-Type: ${html ? 'text/html' : 'text/plain'}; charset="UTF-8"`,
-        '',
+        `MIME-Version: 1.0`,
+        `Content-Type: multipart/mixed; boundary="${boundary}"`,
+        "",
+        `--${boundary}`,
+        `Content-Type: text/html; charset="UTF-8"`,
+        `Content-Transfer-Encoding: 7bit`,
+        "",
         html || body
-    ].join('\r\n');
+    ].join("\r\n");
+
+    for (const attachment of attachments) {
+        message += `\r\n--${boundary}\r\n`;
+        message += `Content-Type: ${attachment.contentType}; name="${attachment.filename}"\r\n`;
+        message += `Content-Disposition: attachment; filename="${attachment.filename}"\r\n`;
+        message += `Content-Transfer-Encoding: base64\r\n\r\n`;
+
+        message += Buffer.from(attachment.content)
+            .toString("base64")
+            .replace(/(.{76})/g, "$1\r\n");
+    }
+
+    message += `\r\n--${boundary}--`;
 
     return Buffer.from(message)
-        .toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
+        .toString("base64")
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
 }
 
 export async function sendAppGmailMessage({
     to,
     subject,
     body,
-    html
+    html,
+    attachments = []
 }) {
     const gmail = getAppGmailClient();
 
@@ -181,7 +230,8 @@ export async function sendAppGmailMessage({
                 to,
                 subject,
                 body,
-                html
+                html,
+                attachments
             })
         }
     });

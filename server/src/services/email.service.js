@@ -165,6 +165,7 @@ export async function sendWeeklyApplicationReportEmail(userEmail, userName, appl
       to: userEmail,
       subject,
       body: text,
-      html
+      html,
+      attachments
     });
 }
