@@ -165,7 +165,7 @@ function fallbackFollowUpDraft(application, user) {
         : '';
 
     return {
-        subject: `Following up — ${application.role} at ${application.companyName}`,
+        subject: `Following up for ${application.role} at ${application.companyName}`,
         body: `Hello,\n\nI hope you are doing well. I wanted to follow up on my application for the ${application.role} position at ${application.companyName}, which I submitted on ${new Date(application.appliedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.${noteLine}\n\nI remain very interested in contributing to the team and would appreciate any update on the hiring timeline or next steps. Please let me know if there is any additional information I can provide to support your review.\n\nThank you for your time and consideration. I look forward to hearing from you.\n\nBest regards,\n${user.name}`
     };
 }
