@@ -14,27 +14,36 @@ export default function App() {
         <ThemeProvider>
             <BrowserRouter>
                 <AuthProvider>
-                    <Routes>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route
-                            path="/dashboard"
-                            element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
-                        />
-                        <Route
-                            path="/profile"
-                            element={<ProtectedRoute><EditProfile /></ProtectedRoute>}
-                        />
-                        <Route
-                            path="/applications/new"
-                            element={<ProtectedRoute><CreateApplication /></ProtectedRoute>}
-                        />
-                        <Route
-                            path="/applications/:id"
-                            element={<ProtectedRoute><ApplicationDetail /></ProtectedRoute>}
-                        />
-                        <Route path="*" element={<Navigate to="/login" replace />} />
-                    </Routes>
+                    <div className="flex flex-col min-h-screen bg-[var(--color-bg)]">
+                        <main className="flex-grow">
+                            <Routes>
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/register" element={<Register />} />
+                                <Route
+                                    path="/dashboard"
+                                    element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+                                />
+                                <Route
+                                    path="/profile"
+                                    element={<ProtectedRoute><EditProfile /></ProtectedRoute>}
+                                />
+                                <Route
+                                    path="/applications/new"
+                                    element={<ProtectedRoute><CreateApplication /></ProtectedRoute>}
+                                />
+                                <Route
+                                    path="/applications/:id"
+                                    element={<ProtectedRoute><ApplicationDetail /></ProtectedRoute>}
+                                />
+                                <Route path="*" element={<Navigate to="/login" replace />} />
+                            </Routes>
+                        </main>
+                        <footer className="py-8 text-center border-t mt-auto" style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface)' }}>
+                            <p className="text-sm font-sans" style={{ color: 'var(--color-text-soft)' }}>
+                                Need help? Contact us: <a href="mailto:trackyourjob.app@gmail.com" className="font-medium underline hover:opacity-80" style={{ color: 'var(--color-text)' }}>trackyourjob.app@gmail.com</a>
+                            </p>
+                        </footer>
+                    </div>
                 </AuthProvider>
             </BrowserRouter>
         </ThemeProvider>
