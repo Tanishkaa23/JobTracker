@@ -9,6 +9,7 @@ import GoogleConnectButton from '../components/GoogleConnectButton';
 import ProfileDropdown from '../components/ProfileDropdown';
 import CareerAssistant from '../components/CareerAssistant';
 import DashboardAnalytics from '../components/DashboardAnalytics';
+import { connectGoogle } from "../utils/googleConnect";
 
 export default function Dashboard() {
     const [applications, setApplications] = useState([]);
@@ -40,7 +41,7 @@ export default function Dashboard() {
     }, []);
 
     function handleConnectGoogle() {
-        window.location.href = `${apiBaseUrl}/google/connect`;
+        connectGoogle();
     }
 
     const fetchApplications = useCallback(async () => {

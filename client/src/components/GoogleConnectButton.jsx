@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
+import { connectGoogle } from "../utils/googleConnect";
 
 export default function GoogleConnectButton() {
     const [status, setStatus] = useState({ connected: false, email: '' });
@@ -23,8 +24,8 @@ export default function GoogleConnectButton() {
         fetchStatus();
     }, []);
 
-    async function handleConnect() {
-        window.location.href = `${apiBaseUrl}/google/connect`;
+    function handleConnectGoogle() {
+        connectGoogle();
     }
 
     async function handleDisconnect() {

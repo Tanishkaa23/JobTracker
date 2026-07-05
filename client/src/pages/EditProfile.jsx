@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import ProfileDropdown from '../components/ProfileDropdown';
+import { connectGoogle } from "../utils/googleConnect";
 
 export default function EditProfile() {
     const { user, updateProfile, logout } = useAuth();
@@ -57,7 +58,7 @@ export default function EditProfile() {
     }
 
     function handleConnectGoogle() {
-        window.location.href = `${apiBaseUrl}/google/connect`;
+        connectGoogle();
     }
 
     return (

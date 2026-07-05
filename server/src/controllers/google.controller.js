@@ -9,7 +9,7 @@ import {
 export async function connectGoogle(req, res) {
     try {
         const authUrl = buildGoogleAuthUrl(req.user._id.toString());
-        return res.redirect(authUrl);
+        return res.status(200).json({ authUrl });
     } catch (error) {
         return res.status(500).json({
             message: 'Unable to start Google connection.',
