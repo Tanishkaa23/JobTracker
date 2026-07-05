@@ -113,17 +113,26 @@ export default function Dashboard() {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3 w-full md:w-auto">
-                        <button
-                            onClick={() => navigate('/applications')}
-                            className="md:hidden flex-1 px-4 py-2.5 rounded-xl text-sm font-bold font-sans border transition-all"
-                            style={{ borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
-                        >
-                            See applications →
-                        </button>
+                    <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+                        <div className="flex items-center gap-2 w-full md:hidden">
+                            <button
+                                onClick={() => navigate('/priorities')}
+                                className="flex-1 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold font-sans border transition-all hover:bg-gray-50 dark:hover:bg-gray-800"
+                                style={{ borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
+                            >
+                                View priorities
+                            </button>
+                            <button
+                                onClick={() => navigate('/applications')}
+                                className="flex-1 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold font-sans border transition-all hover:bg-gray-50 dark:hover:bg-gray-800"
+                                style={{ borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
+                            >
+                                View applications
+                            </button>
+                        </div>
                         <button
                             onClick={() => navigate('/applications/new')}
-                            className="flex-1 md:flex-none px-5 py-2.5 rounded-xl text-sm font-bold font-sans transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow shrink-0 flex items-center justify-center"
+                            className="w-full md:w-auto px-5 py-2.5 rounded-xl text-sm font-bold font-sans transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow shrink-0 flex items-center justify-center"
                             style={{ background: 'var(--color-text)', color: 'var(--color-bg)' }}
                         >
                             <span className="mr-2 text-lg leading-none">+</span> New
@@ -159,7 +168,9 @@ export default function Dashboard() {
                     />
                 )}
 
-                <CareerAssistant />
+                <div className="hidden md:block">
+                    <CareerAssistant />
+                </div>
 
                 <div className="hidden md:block">
                 <div className="flex items-center gap-1.5 rounded-full p-1.5 w-fit mb-4 animate-slide-up animation-delay-300" style={{ background: 'var(--color-border)' }}>

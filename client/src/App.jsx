@@ -9,6 +9,7 @@ import CreateApplication from './pages/CreateApplication';
 import ApplicationDetail from './pages/ApplicationDetail';
 import EditProfile from './pages/EditProfile';
 import MobileApplications from './pages/MobileApplications';
+import MobilePriorities from './pages/MobilePriorities';
 
 export default function App() {
     return (
@@ -27,6 +28,10 @@ export default function App() {
                                 <Route
                                     path="/profile"
                                     element={<ProtectedRoute><EditProfile /></ProtectedRoute>}
+                                />
+                                <Route
+                                    path="/priorities"
+                                    element={<ProtectedRoute><MobilePriorities /></ProtectedRoute>}
                                 />
                                 <Route
                                     path="/applications"
