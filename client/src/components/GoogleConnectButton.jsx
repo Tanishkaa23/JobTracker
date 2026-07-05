@@ -62,7 +62,7 @@ export default function GoogleConnectButton() {
                     </p>
                 </div>
                 <button
-                    onClick={handleConnect}
+                    onClick={handleConnectGoogle}
                     className="shrink-0 px-5 py-2.5 rounded-xl text-sm font-bold font-sans transition-all duration-200 hover:-translate-y-0.5 shadow-sm"
                     style={{ background: 'var(--color-text)', color: 'var(--color-bg)' }}
                 >
