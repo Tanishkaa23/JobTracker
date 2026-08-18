@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -10,6 +11,8 @@ import ApplicationDetail from './pages/ApplicationDetail';
 import EditProfile from './pages/EditProfile';
 import MobileApplications from './pages/MobileApplications';
 import MobilePriorities from './pages/MobilePriorities';
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Terms from "./pages/Terms";
 
 export default function App() {
     return (
@@ -19,8 +22,19 @@ export default function App() {
                     <div className="flex flex-col min-h-screen bg-[var(--color-bg)]">
                         <main className="flex-grow">
                             <Routes>
+                                <Route path="/" element={<Home />} />
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/register" element={<Register />} />
+                                <Route
+                                    path="/privacy-policy"
+                                    element={<PrivacyPolicy />}
+                                />
+
+                                <Route
+                                    path="/terms"
+                                    element={<Terms />}
+                                />
+
                                 <Route
                                     path="/dashboard"
                                     element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
