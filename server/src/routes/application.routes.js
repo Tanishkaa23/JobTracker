@@ -9,7 +9,6 @@ import {
     updateApplication,
     getOneApplication,
     generateFollowUpDraft,
-    sendFollowUpEmail,
     generateInterviewPrepContent
 } from '../controllers/applications.controller.js';
 import { interviewPrepUpload } from '../middlewares/upload.middleware.js';
@@ -17,7 +16,6 @@ import { interviewPrepUpload } from '../middlewares/upload.middleware.js';
 router.get('/', authMiddleware, getApplications);
 router.post('/', authMiddleware, createApplication);
 router.post('/:id/follow-up/draft', authMiddleware, generateFollowUpDraft);
-router.post('/:id/follow-up/send', authMiddleware, sendFollowUpEmail);
 router.post('/:id/interview-prep', authMiddleware, (req, res, next) => {
     interviewPrepUpload(req, res, (err) => {
         if (err) {

@@ -36,9 +36,9 @@ export function buildFallbackRecommendation(priority, index = 0, allPriorities =
     }
 
     return {
-        title: 'Send a recruiter follow-up',
+        title: 'Draft a recruiter follow-up',
         description: `Your ${role} application at ${company} could use a polite check-in to stay on the recruiter's radar.`,
-        suggestedAction: 'Generate a concise follow-up email, review it, and send it from your connected Gmail account.',
+        suggestedAction: 'Generate and review a concise follow-up email draft.',
         motivation: pickMotivation(allPriorities, index, company, role, actionType)
     };
 }
@@ -63,7 +63,7 @@ Return an array with this exact shape:
 ]
 
 Use the deterministic reason and actionType as source of truth. Do not invent deadlines, interview topics, company facts, recruiter details, or application status.
-For FOLLOW_UP priorities, guide the user toward reviewing and sending a concise recruiter follow-up email.
+For FOLLOW_UP priorities, guide the user toward reviewing a concise recruiter follow-up email draft.
 For INTERVIEW priorities, guide the user toward interview preparation for the scheduled interview.
 
 Priorities:

@@ -33,10 +33,8 @@ export default function ApplicationDetail() {
     const [deleting, setDeleting] = useState(false);
 
     const [emailDraft, setEmailDraft] = useState(null);
-    const [emailStatus, setEmailStatus] = useState('');
     const [emailError, setEmailError] = useState('');
     const [draftLoading, setDraftLoading] = useState(false);
-    const [sendingEmail, setSendingEmail] = useState(false);
 
     const [jdText, setJdText] = useState('');
     const [resumeText, setResumeText] = useState('');
@@ -109,7 +107,6 @@ export default function ApplicationDetail() {
     async function handleGenerateFollowUp() {
         setDraftLoading(true);
         setEmailError('');
-        setEmailStatus('');
         try {
             const res = await api.post(`/applications/${id}/follow-up/draft`);
             setEmailDraft(res.data);
@@ -117,25 +114,6 @@ export default function ApplicationDetail() {
             setEmailError(err.response?.data?.message ?? 'Could not generate a follow-up email.');
         } finally {
             setDraftLoading(false);
-        }
-    }
-
-    async function handleSendFollowUp() {
-        setSendingEmail(true);
-        setEmailError('');
-        setEmailStatus('');
-        try {
-            await api.post(`/applications/${id}/follow-up/send`, emailDraft);
-            setEmailStatus('Follow-up email sent.');
-            setApplication((current) => ({
-                ...current,
-                recruiterEmail: emailDraft.to,
-                lastReminderSentAt: new Date().toISOString()
-            }));
-        } catch (err) {
-            setEmailError(err.response?.data?.message ?? 'Could not send the follow-up email.');
-        } finally {
-            setSendingEmail(false);
         }
     }
 
@@ -330,15 +308,6 @@ export default function ApplicationDetail() {
                                         <div className="flex flex-wrap items-center gap-3">
                                             <button
                                                 type="button"
-                                                onClick={handleSendFollowUp}
-                                                disabled={sendingEmail || !emailDraft.to || !emailDraft.subject || !emailDraft.body}
-                                                className="px-4 py-2 rounded-lg text-sm font-medium font-sans transition disabled:opacity-50 shadow-sm"
-                                                style={{ background: '#1a73e8', color: '#FFFFFF' }}
-                                            >
-                                                {sendingEmail ? 'Sending...' : 'Send follow-up email'}
-                                            </button>
-                                            <button
-                                                type="button"
                                                 onClick={handleGenerateFollowUp}
                                                 disabled={draftLoading}
                                                 className="px-4 py-2 rounded-lg text-sm font-medium font-sans transition disabled:opacity-50"
@@ -350,7 +319,6 @@ export default function ApplicationDetail() {
                                     </div>
                                 )}
 
-                                {emailStatus && <p className="text-sm font-sans" style={{ color: 'var(--color-accent)' }}>{emailStatus}</p>}
                                 {emailError && <p className="text-sm font-sans" style={{ color: 'var(--color-danger)' }} role="alert">{emailError}</p>}
                                 </DetailSection>
                             )}
