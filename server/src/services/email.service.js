@@ -1,6 +1,84 @@
 import dotenv from 'dotenv';
-import { sendAppGmailMessage } from './google.service.js';
+import nodemailer from 'nodemailer';
 dotenv.config();
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT || 587),
+  secure: process.env.SMTP_SECURE === 'true',
+  auth: {
+    user: process.env.SMTP_USER || process.env.EMAIL_USER,
+    pass: process.env.SMTP_PASS || process.env.EMAIL_PASS
+  }
+});
+
+export async function verifyEmailTransport() {
+  const missingVariables = ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS']
+    .filter((variable) => !process.env[variable] && !(variable === 'SMTP_USER' && process.env.EMAIL_USER) && !(variable === 'SMTP_PASS' && process.env.EMAIL_PASS));
+
+  if (missingVariables.length) {
+    console.error('[email] SMTP configuration missing', {
+      variables: missingVariables
+    });
+    return false;
+  }
+
+  try {
+    await transporter.verify();
+    console.log('[email] SMTP transport verified', {
+      host: process.env.SMTP_HOST || 'localhost',
+      port: Number(process.env.SMTP_PORT || 587),
+      secure: process.env.SMTP_SECURE === 'true',
+      userConfigured: Boolean(process.env.SMTP_USER || process.env.EMAIL_USER)
+    });
+    return true;
+  } catch (error) {
+    console.error('[email] SMTP transport verification failed', {
+      message: error.message,
+      code: error.code || null,
+      host: process.env.SMTP_HOST || 'localhost',
+      port: Number(process.env.SMTP_PORT || 587)
+    });
+    return false;
+  }
+}
+
+export async function sendEmail({ to, subject, text, html, attachments = [] }) {
+  const startedAt = Date.now();
+  console.log('[email] Sending email', {
+    to,
+    subject,
+    attachmentCount: attachments.length
+  });
+
+  try {
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_FROM || process.env.EMAIL_USER || process.env.SMTP_USER,
+      to,
+      subject,
+      text,
+      html: html || textToEmailHtml(text),
+      attachments
+    });
+    console.log('[email] Email sent', {
+      to,
+      subject,
+      messageId: info.messageId,
+      response: info.response,
+      durationMs: Date.now() - startedAt
+    });
+    return info;
+  } catch (error) {
+    console.error('[email] Email send failed', {
+      to,
+      subject,
+      message: error.message,
+      code: error.code || null,
+      durationMs: Date.now() - startedAt
+    });
+    throw error;
+  }
+}
 
 
 function formatDate(value) {
@@ -14,6 +92,14 @@ function escapeHtml(value) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+function textToEmailHtml(body) {
+  return escapeHtml(body)
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.replace(/\n/g, '<br>'))
+    .map((paragraph) => `<p style="margin:0 0 14px;line-height:1.55;">${paragraph}</p>`)
+    .join('');
 }
 
 
@@ -33,10 +119,10 @@ export async function sendRegEmail(userEmail, name) {
     </div>
   `;
 
-  await sendAppGmailMessage({
+  await sendEmail({
     to: userEmail,
     subject,
-    body: text,
+    text,
     html
 });
 }
@@ -78,12 +164,12 @@ export async function sendStaleApplicationReminderEmail(userEmail, userName, app
     </div>
   `;
 
-    await sendAppGmailMessage({
+    await sendEmail({
       to: userEmail,
       subject,
-      body: text,
+      text,
       html
-    });;
+    });
 }
 
 export async function sendWeeklyApplicationReportEmail(userEmail, userName, applications) {
@@ -161,10 +247,10 @@ export async function sendWeeklyApplicationReportEmail(userEmail, userName, appl
     </div>
   `;
 
-    await sendAppGmailMessage({
+    await sendEmail({
       to: userEmail,
       subject,
-      body: text,
+      text,
       html,
       attachments
     });

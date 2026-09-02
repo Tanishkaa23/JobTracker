@@ -4,82 +4,12 @@ import applicationModel from '../models/application.model.js';
 import userModel from '../models/user.model.js';
 import { CLOSED_STATUSES, STALE_THRESHOLD_MS } from '../constants/constants.js';
 import { sendStaleApplicationReminderEmail, sendWeeklyApplicationReportEmail } from './email.service.js';
-import { createInterviewCalendarEvent } from './google.service.js';
 
 let isRunning = false;
 let cronTask = null;
 let isReady = false;
 let lastRunAt = null;
 const RUN_COOLDOWN_MS = 5 * 60 * 1000;
-
-async function scheduleInterviewCalendarEvents() {
-    console.log('[cron] Running scheduleInterviewCalendarEvents');
-    const now = new Date(); //26 june 
-    const startWindow = new Date(now); // 26 june
-    startWindow.setDate(now.getDate() + 1); //27
-    startWindow.setHours(0, 0, 0, 0);
-
-    const endWindow = new Date(startWindow);
-    endWindow.setDate(startWindow.getDate() + 2);
-
-    console.log('[cron] startWindow:', startWindow.toISOString());
-    console.log('[cron] endWindow:', endWindow.toISOString());
-
-    const query = {
-        interviewDate: { $gte: startWindow, $lt: endWindow },
-        status: { $nin: ['rejected', 'offered'] },
-        googleEventId: null
-    };
-    console.log('[cron] interview query:', JSON.stringify(query));
-
-    const applications = await applicationModel.find(query);
-    console.log('[cron] interview calendar candidates:', applications.length);
-
-    for (const application of applications) {
-        const user = await userModel.findById(application.userId);
-        if (!application.interviewDate) {
-            console.log(`[cron] Skipping ${application.companyName}: interviewDate missing`);
-            continue;
-        }
-        if (!user) {
-            console.log(`[cron] Skipping ${application.companyName}: user not found`);
-            continue;
-        }
-        if (!user.google?.connected) {
-            console.log(`[cron] Skipping ${application.companyName}: Google not connected`);
-            continue;
-        }
-        if (application.googleEventId) {
-            console.log(`[cron] Skipping ${application.companyName}: googleEventId already exists`);
-            continue;
-        }
-
-        try {
-            const claimed = await applicationModel.updateOne(
-                { _id: application._id, googleEventId: null },
-                { $set: { googleEventId: 'PENDING' } }
-            );
-
-            if (claimed.modifiedCount !== 1) {
-                console.log(`[cron] Another run already claimed ${application.companyName}, skipping`);
-                continue;
-            }
-
-            const eventId = await createInterviewCalendarEvent(user, application);
-            await applicationModel.updateOne(
-                { _id: application._id, googleEventId: 'PENDING' },
-                { $set: { googleEventId: eventId } }
-            );
-            console.log(`[cron] Calendar event created for ${application.companyName}: ${eventId}`);
-        } catch (error) {
-            await applicationModel.updateOne(
-                { _id: application._id, googleEventId: 'PENDING' },
-                { $set: { googleEventId: null } }
-            );
-            console.error(`[cron] Calendar event error for ${application.companyName}:`, error);
-        }
-    }
-}
 
 async function sendDailyStaleReminders() {
     console.log('[cron] Running sendDailyStaleReminders');
@@ -151,8 +81,8 @@ async function sendWeeklyReports() {
     console.log('[cron] today:', today.toISOString());
     console.log('[cron] today.getDay():', today.getDay());
 
-    if (today.getDay() !== 0) { //change to 1 
-        console.log('[cron] Weekly report skipped: not Tuesday');
+    if (today.getDay() !== 1) { 
+        console.log('[cron] Weekly report skipped: not Monday');
         return;
     }
 
@@ -204,10 +134,6 @@ export async function runScheduledTasks() {
     isRunning = true;
     console.log('[cron] Scheduled task run started');
     try {
-        console.log('[cron] Running scheduleInterviewCalendarEvents');
-        await scheduleInterviewCalendarEvents();
-        console.log('[cron] Finished scheduleInterviewCalendarEvents');
-
         console.log('[cron] Running sendDailyStaleReminders');
         await sendDailyStaleReminders();
         console.log('[cron] Finished sendDailyStaleReminders');
@@ -223,7 +149,7 @@ export async function runScheduledTasks() {
 
 function registerCron() {
     console.log('[cron] Registering cron job');
-    cronTask = cron.schedule('46 18 * * *', async () => {
+    cronTask = cron.schedule('29 17 * * *', async () => {
         console.log('[cron] callback fired');
         await runScheduledTasks();
     }, {

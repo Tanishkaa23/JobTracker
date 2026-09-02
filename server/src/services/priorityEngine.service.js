@@ -77,7 +77,7 @@ function getPriorityLabel(priority) {
 function getIcon(actionType) {
     const icons = {
         [ACTION_TYPES.FOLLOW_UP]: 'mail',
-        [ACTION_TYPES.INTERVIEW]: 'calendar'
+        [ACTION_TYPES.INTERVIEW]: 'interview'
     };
 
     return icons[actionType] || 'spark';

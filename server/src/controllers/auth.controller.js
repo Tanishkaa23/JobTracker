@@ -27,7 +27,12 @@ export async function registerUser(req, res) {
 
         res.status(201).json({message: "User registered successfully", user: {name,email}});
 
-        await sendRegEmail(user.email, user.name)
+        sendRegEmail(user.email, user.name).catch((error) => {
+            console.error('[auth] Onboarding email failed', {
+                userId: user._id.toString(),
+                error: error.message
+            });
+        });
 
     } catch (error) {
         res.status(400).json({message: error.message});

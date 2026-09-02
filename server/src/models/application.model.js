@@ -35,7 +35,6 @@ const applicationSchema = new mongoose.Schema({
     salary: { type: Number },
     notes: { type: String },
     interviewDate: { type: Date },
-    googleEventId: { type: String, default: null },
     lastReminderSentAt: { type: Date, default: null },
     lastWeeklyReportSentAt: { type: Date, default: null }
 }, {
