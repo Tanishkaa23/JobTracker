@@ -5,11 +5,9 @@ import { useAuth } from '../context/AuthContext';
 import ApplicationCard from '../components/ApplicationCard';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import ConfirmModal from '../components/ConfirmModal';
-import GoogleConnectButton from '../components/GoogleConnectButton';
 import ProfileDropdown from '../components/ProfileDropdown';
 import CareerAssistant from '../components/CareerAssistant';
 import DashboardAnalytics from '../components/DashboardAnalytics';
-import { connectGoogle } from "../utils/googleConnect";
 
 export default function Dashboard() {
     const [applications, setApplications] = useState([]);
@@ -18,31 +16,9 @@ export default function Dashboard() {
     const [filter, setFilter] = useState('all'); // 'all' | 'stale'
     const [statusChartFilter, setStatusChartFilter] = useState(null);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-    const [googleStatus, setGoogleStatus] = useState({ connected: false });
-    const [googleStatusLoading, setGoogleStatusLoading] = useState(true);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const apiBaseUrl = import.meta.env.VITE_API_URL ;
-
-    async function fetchGoogleStatus() {
-        setGoogleStatusLoading(true);
-        try {
-            const res = await api.get('/google/status');
-            setGoogleStatus(res.data);
-        } catch (err) {
-            setGoogleStatus({ connected: false });
-        } finally {
-            setGoogleStatusLoading(false);
-        }
-    }
-
-    useEffect(() => {
-        fetchGoogleStatus();
-    }, []);
-
-    function handleConnectGoogle() {
-        connectGoogle();
-    }
 
     const fetchApplications = useCallback(async () => {
         setLoading(true);
@@ -94,11 +70,8 @@ export default function Dashboard() {
                         <ThemeSwitcher />
                         <ProfileDropdown
                             user={user}
-                            googleStatus={googleStatus}
-                            googleLoading={googleStatusLoading}
                             onEditProfile={() => navigate('/profile')}
                             onLogout={() => setShowLogoutConfirm(true)}
-                            onConnectGoogle={handleConnectGoogle}
                         />
                     </div>
                 </div>
@@ -154,10 +127,6 @@ export default function Dashboard() {
                         <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--color-accent)' }}>Active Now</p>
                         <p className="font-serif text-3xl font-bold" style={{ color: 'var(--color-text)' }}>{applications.length - staleCount}</p>
                     </div>
-                </div>
-
-                <div className="mb-8 animate-slide-up animation-delay-300">
-                    <GoogleConnectButton />
                 </div>
 
                 {!loading && applications.length > 0 && (

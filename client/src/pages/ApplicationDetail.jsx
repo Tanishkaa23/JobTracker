@@ -335,7 +335,7 @@ export default function ApplicationDetail() {
                                                 className="px-4 py-2 rounded-lg text-sm font-medium font-sans transition disabled:opacity-50 shadow-sm"
                                                 style={{ background: '#1a73e8', color: '#FFFFFF' }}
                                             >
-                                                {sendingEmail ? 'Sending...' : 'Send from Google Mail'}
+                                                {sendingEmail ? 'Sending...' : 'Send follow-up email'}
                                             </button>
                                             <button
                                                 type="button"

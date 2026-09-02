@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import api from '../api/axios';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import ProfileDropdown from '../components/ProfileDropdown';
-import { connectGoogle } from "../utils/googleConnect";
 
 export default function EditProfile() {
     const { user, updateProfile, logout } = useAuth();
@@ -13,8 +11,6 @@ export default function EditProfile() {
     const [status, setStatus] = useState('');
     const [error, setError] = useState('');
     const [saving, setSaving] = useState(false);
-    const [googleStatus, setGoogleStatus] = useState({ connected: false });
-    const [googleStatusLoading, setGoogleStatusLoading] = useState(true);
     const navigate = useNavigate();
     const apiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -24,22 +20,6 @@ export default function EditProfile() {
             setEmail(user.email);
         }
     }, [user]);
-
-    async function fetchGoogleStatus() {
-        setGoogleStatusLoading(true);
-        try {
-            const res = await api.get('/google/status');
-            setGoogleStatus(res.data);
-        } catch (err) {
-            setGoogleStatus({ connected: false });
-        } finally {
-            setGoogleStatusLoading(false);
-        }
-    }
-
-    useEffect(() => {
-        fetchGoogleStatus();
-    }, []);
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -55,10 +35,6 @@ export default function EditProfile() {
         } finally {
             setSaving(false);
         }
-    }
-
-    function handleConnectGoogle() {
-        connectGoogle();
     }
 
     return (
@@ -80,14 +56,11 @@ export default function EditProfile() {
                         <ThemeSwitcher />
                         <ProfileDropdown
                             user={user}
-                            googleStatus={googleStatus}
-                            googleLoading={googleStatusLoading}
                             onEditProfile={() => navigate('/profile')}
                             onLogout={async () => {
                                 await logout();
                                 navigate('/login');
                             }}
-                            onConnectGoogle={handleConnectGoogle}
                         />
                     </div>
                 </div>

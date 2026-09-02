@@ -4,7 +4,7 @@ const ACTION_LABELS = {
 };
 
 const ICON_LABELS = {
-    calendar: 'C',
+    interview: 'I',
     mail: 'M',
     spark: 'S'
 };

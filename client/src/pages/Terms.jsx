@@ -56,28 +56,6 @@ const Terms = () => {
 
         <section className="mb-6">
           <h2 className="mb-2 text-xl font-semibold text-gray-900">
-            4. Google Integration
-          </h2>
-
-          <p className="leading-7 text-gray-700">
-            Job Tracker may provide optional integration with Google
-            services such as Google Calendar and Gmail.
-          </p>
-
-          <p className="mt-3 leading-7 text-gray-700">
-            By connecting your Google account, you authorize Job Tracker
-            to access only the Google services and permissions that you
-            approve through Google's OAuth consent process.
-          </p>
-
-          <p className="mt-3 leading-7 text-gray-700">
-            You may revoke these permissions at any time through your
-            Google Account settings.
-          </p>
-        </section>
-
-        <section className="mb-6">
-          <h2 className="mb-2 text-xl font-semibold text-gray-900">
             5. Acceptable Use
           </h2>
 
@@ -113,8 +91,8 @@ const Terms = () => {
           </h2>
 
           <p className="leading-7 text-gray-700">
-            Job Tracker may depend on third-party services such as Google
-            APIs, hosting providers, databases, and email services.
+            Job Tracker may depend on third-party services such as hosting
+            providers, databases, and email services.
             Availability of these services may affect the availability of
             certain Job Tracker features.
           </p>
