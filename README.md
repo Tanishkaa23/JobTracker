@@ -6,8 +6,7 @@ Job Tracker is a comprehensive, AI-powered application designed to streamline th
 
 *   **Application Management & Pipeline Tracking**: Easily track applications across various stages (Applied, Interviewing, Offered, Rejected) and view key details like salaries, notes, and dates.
 *   **AI Career Assistant**: Powered by **Groq**, the AI assistant can analyze a pasted or uploaded Resume (PDF/TXT) and Job Description to generate tailored interview preparation materials (likely questions, focus topics, strengths to highlight).
-*   **Automated Follow-ups (Google Integration)**: Generate professional follow-up email drafts using AI and send them directly to recruiters from the dashboard via **Gmail** (Google OAuth2).
-*   **Automated Reports & Reminders**: Scheduled Cron jobs automatically detect stale applications and send reminders, as well as compile and send weekly analytics reports (with CSV attachments) using **Nodemailer**.
+*  - **Nodemailer & SMTP**: Used for automated onboarding emails, stale application reminders, and weekly analytics reports.
 *   **Dashboard & Analytics**: Visualize application progress, success rates, and pipeline health using dynamic charts built with **Recharts**.
 *   **Secure Authentication**: robust user registration and login system utilizing **JWT** and bcrypt for secure access.
 
@@ -61,7 +60,7 @@ Job Tracker/
 ### Prerequisites
 *   Node.js (v18+)
 *   MongoDB Instance (Local or Atlas)
-*   Google Cloud Console Project (for OAuth2 Client ID/Secret)
+*   Nodemailer (for emails)
 *   Groq API Key
 
 ### Installation
